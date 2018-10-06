@@ -7,19 +7,8 @@ struct LCD
 // Envia o nibble alto seguido no nibble baixo para o display
 void WriteByteLCD(const struct LCD *lcd, byte value)
 {
-  RiseClockLCD(lcd);
-  digitalWrite(lcd->DB7, (value >> 7) & 0x01);
-  digitalWrite(lcd->DB6, (value >> 6) & 0x01);
-  digitalWrite(lcd->DB5, (value >> 5) & 0x01);
-  digitalWrite(lcd->DB4, (value >> 4) & 0x01);
-  LowClockLCD(lcd);
-
-  RiseClockLCD(lcd);
-  digitalWrite(lcd->DB7, (value >> 3) & 0x01);
-  digitalWrite(lcd->DB6, (value >> 2) & 0x01);
-  digitalWrite(lcd->DB5, (value >> 1) & 0x01);
-  digitalWrite(lcd->DB4, value & 0x01);
-  LowClockLCD(lcd);
+  WriteNibbleLCD(lcd, (value >> 4) & 0x0F);
+  WriteNibbleLCD(lcd, value & 0x0F);
 }
 
 // Envia um nibble para o display
