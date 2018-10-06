@@ -81,7 +81,7 @@ void InitLCD(struct LCD *lcd, int RS, int EN, int DB7, int DB6, int DB5, int DB4
   WriteNibbleLCD(lcd, 0x02); // Ativa o display para o modo de 4 bits
   WriteByteLCD(lcd, 0x28);   // quatro bits; duas linhas
   WriteByteLCD(lcd, 0x0F);   // Liga display, cursor piscante
-  WriteByteLCD(lcd, 0x06);   // Deslocamento automático do cursor da direita para a esquerda. Scroll desligado.
+  WriteByteLCD(lcd, 0x06);   // Deslocamento automático do cursor da direita para a esquerda. Scroll ligado.
   WriteByteLCD(lcd, 0x01);   // Limpa o display.
   WriteByteLCD(lcd, 0x80);   // Coloca o cursor no início da primeira linha
 }
