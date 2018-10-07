@@ -84,6 +84,14 @@ void SetCursorLCD(const struct LCD *lcd, byte line, byte col)
   WriteByteLCD(lcd, comando);
 }
 
+// Desloca o display. RL = 1 para direita ou 0 para esquerda
+void ShiftDisplayLCD(const struct LCD *lcd, int RL)
+{
+  byte comando = (RL > 0) ? 0x1C : 0x18;
+  SelectInstructionLCD(lcd);
+  WriteByteLCD(lcd, comando);
+}
+
 // Imprime uma string no display (deve terminar com caractere nulo)
 void PrintLCD(const struct LCD *lcd, const char *str)
 {
@@ -103,5 +111,6 @@ void setup() {
 }
 
 void loop() {
-  
+  ShiftDisplayLCD(&lcd, 0);
+  delay(100);
 }
