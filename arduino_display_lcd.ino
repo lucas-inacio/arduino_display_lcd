@@ -75,8 +75,17 @@ void InitLCD(struct LCD *lcd, int RS, int EN, int DB7, int DB6, int DB5, int DB4
   WriteByteLCD(lcd, 0x80);   // Coloca o cursor no início da primeira linha
 }
 
+// Assume o uso de um display de 2 linhas e 16 colunas
+void SetCursorLCD(const struct LCD *lcd, byte line, byte col)
+{
+  byte comando = (line > 0) ? 0xC0 : 0x80;
+  comando |= col;
+  SelectInstructionLCD(lcd);
+  WriteByteLCD(lcd, comando);
+}
+
 // Imprime uma string no display (deve terminar com caractere nulo)
-void PrintLCD(struct LCD *lcd, const char *str)
+void PrintLCD(const struct LCD *lcd, const char *str)
 {
   SelectDataLCD(lcd);
   char c;
@@ -89,6 +98,7 @@ struct LCD lcd;
 void setup() {
   Serial.begin(9600);
   InitLCD(&lcd, 8, 9, 7, 6, 5, 4);
+  SetCursorLCD(&lcd, 0, 2);
   PrintLCD(&lcd, "Hello, world!");
 }
 
