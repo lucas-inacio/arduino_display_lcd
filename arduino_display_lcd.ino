@@ -14,22 +14,18 @@ void WriteByteLCD(const struct LCD *lcd, byte value)
 // Envia um nibble para o display
 void WriteNibbleLCD(const struct LCD *lcd, byte value)
 {
-  RiseClockLCD(lcd);
   digitalWrite(lcd->DB7, (value >> 3) & 0x01);
   digitalWrite(lcd->DB6, (value >> 2) & 0x01);
   digitalWrite(lcd->DB5, (value >> 1) & 0x01);
   digitalWrite(lcd->DB4, value & 0x01);
-  LowClockLCD(lcd);
+  ClockLCD(lcd);
 }
 
-void RiseClockLCD(const struct LCD *lcd)
+void ClockLCD(const struct LCD *lcd)
 {
+  delay(2);
   digitalWrite(lcd->EN, HIGH);
   delay(2);
-}
-
-void LowClockLCD(const struct LCD *lcd)
-{
   digitalWrite(lcd->EN, LOW);
   delay(2);
 }
@@ -104,13 +100,10 @@ void PrintLCD(const struct LCD *lcd, const char *str)
 
 struct LCD lcd;
 void setup() {
-  Serial.begin(9600);
   InitLCD(&lcd, 8, 9, 7, 6, 5, 4);
-  SetCursorLCD(&lcd, 0, 2);
-  PrintLCD(&lcd, "Hello, world!");
+  PrintLCD(&lcd, "Texto maroto");
 }
 
 void loop() {
-  ShiftDisplayLCD(&lcd, 0);
-  delay(100);
+  
 }
