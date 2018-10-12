@@ -88,6 +88,12 @@ void ShiftDisplayLCD(const struct LCD *lcd, int RL)
   WriteByteLCD(lcd, comando);
 }
 
+void ClearLCD(const struct LCD *lcd)
+{
+  SelectInstructionLCD(lcd);
+  WriteByteLCD(lcd, 0x01);
+}
+
 // Imprime uma string no display (deve terminar com caractere nulo)
 void PrintLCD(const struct LCD *lcd, const char *str)
 {
@@ -97,13 +103,56 @@ void PrintLCD(const struct LCD *lcd, const char *str)
     WriteByteLCD(lcd, c);
 }
 
+// Código para leitura dos botões do shield LCD para arduino
+const int RIGHT  = 0;
+const int UP     = 1;
+const int DOWN   = 2;
+const int LEFT   = 3;
+const int SELECT = 4;
+const char *FRASES[] = {
+    "RIGHT",
+    "UP",
+    "DOWN",
+    "LEFT",
+    "SELECT"
+  };
 
+int detectaBotao(int pino)
+{
+  int valor = analogRead(pino);
+  if (valor <= 10) // Margem de erro para zero
+    return 0;
+  else if (valor <= 155)
+    return 1;
+  else if (valor <= 335)
+    return 2;
+  else if (valor <= 515)
+    return 3;
+  else if (valor <= 750)
+    return 4;
+  else return -1;
+}
+
+// Configuração inicial
 struct LCD lcd;
 void setup() {
+  pinMode(A0, INPUT);
   InitLCD(&lcd, 8, 9, 7, 6, 5, 4);
   PrintLCD(&lcd, "Texto maroto");
 }
 
+// Loop principal
+int textoAtual = -1;
 void loop() {
-  
+  int novoTexto = detectaBotao(A0);
+  Serial.println(novoTexto);
+  if (textoAtual != novoTexto && novoTexto >= 0)
+  {
+    SelectInstructionLCD(&lcd);
+    ClearLCD(&lcd);
+    SetCursorLCD(&lcd, 0, 0);
+    PrintLCD(&lcd, FRASES[novoTexto]);
+    textoAtual = novoTexto;
+  }
+  delay(100);
 }
